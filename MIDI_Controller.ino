@@ -16,23 +16,23 @@ MIDI_CREATE_DEFAULT_INSTANCE();
 //***SET THE NUMBER OF CONTROLS USED**************************
 //************************************************************
 //---How many buttons are connected directly to pins?---------
-byte NUMBER_BUTTONS = 3;
+byte NUMBER_BUTTONS = 0;
 //---How many potentiometers are connected directly to pins?--
 byte NUMBER_POTS = 0;
 //---How many buttons are connected to a multiplexer?---------
-byte NUMBER_MUX_BUTTONS = 0;
+byte NUMBER_MUX_BUTTONS = 15;
 //---How many potentiometers are connected to a multiplexer?--
 byte NUMBER_MUX_POTS = 0;
 //************************************************************
 
 //***ANY MULTIPLEXERS? (74HC4067)************************************
 //MUX address pins must be connected to Arduino UNO pins 2,3,4,5
-//A0 = PIN2, A1 = PIN3, A2 = PIN4, A3 = PIN5
+// A0 = PIN2, A1 = PIN3, A2 = PIN4, A3 = PIN5
 //*******************************************************************
 //Mux NAME (OUTPUT PIN, , How Many Mux Pins?(8 or 16) , Is It Analog?);
 
 
-//Mux M1(10, 16, false); //Digital multiplexer on Arduino pin 10
+Mux M1(6, 16, false); //Digital multiplexer on Arduino pin 10
 //Mux M2(A5, 8, true); //Analog multiplexer on Arduino analog pin A0
 //*******************************************************************
 
@@ -57,9 +57,9 @@ Pot *POTS[] {};
 //Button (Pin Number, Command, Note Number, Channel, Debounce Time)
 //** Command parameter 0=NOTE  1=CC  2=Toggle CC **
 
-Button BU1(2, 0, 36, 1, 5 );
-Button BU2(3, 0, 40, 1, 5 );
-Button BU3(4, 0, 42, 1, 5 );
+// Button BU1(2, 0, 36, 1, 5 );
+// Button BU2(3, 0, 40, 1, 5 );
+// Button BU3(4, 0, 42, 1, 5 );
 //Button BU4(5, 0, 63, 1, 5 );
 //Button BU5(6, 0, 64, 1, 5 );
 //Button BU6(7, 0, 65, 1, 5 );
@@ -67,7 +67,7 @@ Button BU3(4, 0, 42, 1, 5 );
 //Button BU8(9, 2, 64, 1, 5 );
 //*******************************************************************
 //Add buttons used to array below like this->  Button *BUTTONS[] {&BU1, &BU2, &BU3, &BU4, &BU5, &BU6, &BU7, &BU8};
-Button *BUTTONS[] {&BU1, &BU2, &BU3};
+Button *BUTTONS[] {};
 //*******************************************************************
 
 
@@ -75,25 +75,25 @@ Button *BUTTONS[] {&BU1, &BU2, &BU3};
 //Button::Button(Mux mux, byte muxpin, byte command, byte value, byte channel, byte debounce)
 //** Command parameter 0=NOTE  1=CC  2=Toggle CC **
 
-//Button MBU1(M1, 0, 0, 70, 1, 5);
-//Button MBU2(M1, 1, 1, 71, 1, 5);
-//Button MBU3(M1, 2, 2, 72, 1, 5);
-//Button MBU4(M1, 3, 0, 73, 1, 5);
-//Button MBU5(M1, 4, 0, 74, 1, 5);
-//Button MBU6(M1, 5, 0, 75, 1, 5);
-//Button MBU7(M1, 6, 0, 76, 1, 5);
-//Button MBU8(M1, 7, 0, 77, 1, 5);
-//Button MBU9(M1, 8, 0, 78, 1, 5);
-//Button MBU10(M1, 9, 0, 79, 1, 5);
-//Button MBU11(M1, 10, 0, 80, 1, 5);
-//Button MBU12(M1, 11, 0, 81, 1, 5);
-//Button MBU13(M1, 12, 0, 82, 1, 5);
-//Button MBU14(M1, 13, 0, 83, 1, 5);
-//Button MBU15(M1, 14, 0, 84, 1, 5);
+Button MBU1(M1, 0, 0, 70, 1, 5);
+Button MBU2(M1, 1, 0, 72, 1, 5);
+Button MBU3(M1, 2, 0, 74, 1, 5);
+Button MBU4(M1, 3, 0, 75, 1, 5);
+Button MBU5(M1, 4, 0, 77, 1, 5);
+Button MBU6(M1, 5, 0, 79, 1, 5);
+Button MBU7(M1, 6, 0, 81, 1, 5);
+Button MBU8(M1, 7, 0, 82, 1, 5);
+Button MBU9(M1, 8, 0, 84, 1, 5);
+Button MBU10(M1, 9, 0, 86, 1, 5);
+Button MBU11(M1, 10, 0, 87, 1, 5);
+Button MBU12(M1, 11, 0, 89, 1, 5);
+Button MBU13(M1, 12, 0, 91, 1, 5);
+Button MBU14(M1, 13, 0, 92, 1, 5);
+Button MBU15(M1, 14, 0, 93, 1, 5);
 //Button MBU16(M1, 15, 0, 85, 1, 5);
 //*******************************************************************
 ////Add multiplexed buttons used to array below like this->  Button *MUXBUTTONS[] {&MBU1, &MBU2, &MBU3, &MBU4, &MBU5, &MBU6.....};
-Button *MUXBUTTONS[] {};
+Button *MUXBUTTONS[] {&MBU1, &MBU2, &MBU3, &MBU4, &MBU5, &MBU6, &MBU7, &MBU8, &MBU9, &MBU10, &MBU11, &MBU12, &MBU13, &MBU14, &MBU15};
 
 //*******************************************************************
 
@@ -149,12 +149,6 @@ void updateButtons() {
       switch (BUTTONS[i]->Bcommand) {
         case 0: //Note
           MIDI.sendNoteOn(BUTTONS[i]->Bvalue, 127, BUTTONS[i]->Bchannel);
-          // MIDI.sendNoteOn(BUTTONS[i]->Bvalue+4, 127, BUTTONS[i]->Bchannel);
-          // MIDI.sendNoteOn(BUTTONS[i]->Bvalue+7, 127, BUTTONS[i]->Bchannel);
-          // MIDI.sendNoteOn(60, 127, 1);
-          // delay(500);
-          // Serial.println(BUTTONS[i]->Bvalue);
-          // Serial.println(60);
           break;
         case 1: //CC
           MIDI.sendControlChange(BUTTONS[i]->Bvalue, 127, BUTTONS[i]->Bchannel);
@@ -200,6 +194,10 @@ void updateMuxButtons() {
     if (message == 0) {
       switch (MUXBUTTONS[i]->Bcommand) {
         case 0: //Note
+          // Serial.print("Sending Note On: ");
+          // Serial.print(MUXBUTTONS[i]->Bvalue);
+          // Serial.print(" on Channel: ");
+          // Serial.println(MUXBUTTONS[i]->Bchannel);
           MIDI.sendNoteOn(MUXBUTTONS[i]->Bvalue, 127, MUXBUTTONS[i]->Bchannel);
           break;
         case 1: //CC
@@ -221,6 +219,10 @@ void updateMuxButtons() {
     if (message == 1) {
       switch (MUXBUTTONS[i]->Bcommand) {
         case 0:
+          // Serial.print("Sending Note Off: ");
+          // Serial.print(MUXBUTTONS[i]->Bvalue);
+          // Serial.print(" on Channel: ");
+          // Serial.println(MUXBUTTONS[i]->Bchannel);
           MIDI.sendNoteOff(MUXBUTTONS[i]->Bvalue, 0, MUXBUTTONS[i]->Bchannel);
           break;
         case 1:
